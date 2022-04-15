@@ -116,15 +116,12 @@ def visualized_area_with_map(radar, place, shape_size=[105, 105], title='', save
 
     x, y = get_xy_hiroi(place)
 
-    #    radar = radar[y-int(shape_size[0]//2):y+int(shape_size[0]//2)+1, x-int(shape_size[1]//2):x+int(shape_size[1]//2)+1]
-
     m = Basemap(projection='merc', resolution='i', fix_aspect=True,
                 llcrnrlon=llcrnrlon, llcrnrlat=llcrnrlat,
                 urcrnrlon=urcrnrlon, urcrnrlat=urcrnrlat,
                 lat_ts=20)
 
     point_x, point_y = m((llcrnrlon + urcrnrlon) / 2, (llcrnrlat + urcrnrlat) / 2)
-    #    m.plot(point_x, point_y, linestyle='none', marker="o", markersize=45, alpha=0.4, markeredgecolor="red", markeredgewidth=1)#, c='white'
     m.plot(point_x, point_y, linestyle='none', marker="D", markersize=1, alpha=1, c='red', markeredgecolor="red",
            markeredgewidth=1)
     point_x, point_y = m((llcrnrlon + urcrnrlon) / 2 - 0.0125 * 5, (llcrnrlat + urcrnrlat) / 2 + 0.0125 * 11)
@@ -156,7 +153,6 @@ def visualized_area_with_map(radar, place, shape_size=[105, 105], title='', save
     norm = colors.BoundaryNorm(clevels, 7504)
     cax = m.pcolormesh(x, y, radar, norm=norm, cmap=precip_colormap, shading='auto')
     m.colorbar(cax, ticks=[0, 1, 2, 6, 10, 15, 20, 30, 40, 50, 70, 90, 110, 130, 150, 200, 300, 400])
-    # [0, 1, 6, 10, 15, 20, 30, 40, 50, 70, 90, 110, 130, 150, 200, 300, 400]
     plt.title(str(title))
     plt.xlabel('lon', fontsize=12, x=1)
     plt.ylabel('lat', fontsize=12, y=1)
@@ -186,26 +182,12 @@ def get_xy_hiroi(place=None):
 
 
 if __name__ == "__main__":
-
     import gzip, struct
 
-    # D:\yu_ting\predrnn\predrnn_gogo\NWP\compref_mosaic\20180824\compref_mosaic
     gz = gzip.open("NWP/compref_mosaic/20180824/compref_mosaic/COMPREF.20180824.0010.gz").read()
-    # gz = gzip.open("NWP/CPLmaster/2018/20180827/compref_mosaic/COMPREF.20180827.0010.gz").read()
-
     radar = np.array(struct.unpack(881 * 921 * 'h', gz[-881 * 921 * 2:])).reshape(881, 921).astype(np.float64) / 10
-
     print(radar.shape)
-    #    visualized_cloud(radar, 'visualized_cloud')
-    #    plt.show()
-    #
-    #    visualized_with_map(radar, title="visualized_with_map", hiroi=True)
-    #    plt.show()
 
-    #    visualized_area_with_map(radar, 'Chaozhou', [200, 200], title='visualized_area_with_map')
-    #    plt.show()
-
-    #    print(globals())
     for i in range(10):
         visualized_area_with_map(radar, 'Sun_Moon_Lake', [200, 200], title='visualized_area_with_map')
         plt.show()
